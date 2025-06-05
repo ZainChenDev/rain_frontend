@@ -9,7 +9,9 @@ const service = axios.create({
   timeout: 10000
 })
 
-// request拦截器
+/*
+  request拦截器
+*/
 service.interceptors.request.use(
   (config) => {
     // 是否需要token
@@ -29,6 +31,9 @@ service.interceptors.request.use(
   }
 )
 
+/*
+  response拦截器
+*/
 service.interceptors.response.use(
   (response) => {
     // 处理响应数据
@@ -47,3 +52,5 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+export default service

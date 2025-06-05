@@ -1,4 +1,5 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken } from '@/utils/auth'
+import { login } from '@/api/login'
 
 // 定义Store状态接口
 interface UserState {
@@ -37,8 +38,20 @@ const useUserStore = defineStore('user', {
       const uuid = userInfo.uuid
 
       return new Promise((resolve, reject) => {
-        login()
+        login({ username, password, code, uuid })
+          .then((res) => {
+            setToken(res.token)
+            this.token = res.token
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
-    }
+    },
+
+    getInfo() {}
   }
 })
+
+export default useUserStore
