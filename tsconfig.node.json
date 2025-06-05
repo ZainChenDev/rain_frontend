@@ -1,0 +1,13 @@
+// 为vite、vitest、cypress、nightwatch、playwright等工具提供的tsconfig配置
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*", "eslint.config.*"],
+  "compilerOptions": {
+    "noEmit": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"]
+  }
+}
