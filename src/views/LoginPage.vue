@@ -24,9 +24,12 @@
 </template>
 
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
+import useUserStore from '@/stores/modules/user'
 
 import Cookies from 'js-cookie'
+
+import type { FormInstance, FormRules } from 'element-plus'
+import type { LocationQueryValue } from 'vue-router'
 
 // 定义接口
 interface LoginForm {
@@ -38,6 +41,9 @@ interface LoginForm {
 }
 
 const title = import.meta.env.VITE_APP_TITLE
+const userStore = useUserStore()
+const route = useRoute()
+const router = useRouter()
 
 const loginForm = ref<LoginForm>({
   username: 'admin',
@@ -56,6 +62,8 @@ const loginFormRules = ref<FormRules<LoginForm>>({
 })
 
 const loading = ref<boolean>(false)
+
+const redirect = ref(undefined)
 
 /* 登录 */
 const handleLogin = async (formEl: FormInstance | undefined) => {
@@ -77,6 +85,28 @@ const handleLogin = async (formEl: FormInstance | undefined) => {
         Cookies.remove('password')
         Cookies.remove('rememberMe')
       }
+
+      userStore
+        .login(loginForm.value)
+        .then(() => {
+          // 从当前路由 (route.query) 获取查询参数，过滤掉"redirect"，保留其他所有参数到otherQueryParams
+          const query = route.query
+          const otherQueryParams = Object.keys(query).reduce(
+            (acc: Record<string, LocationQueryValue | LocationQueryValue[]>, cur: string) => {
+              if (cur !== 'redirect') {
+                acc[cur] = query[cur]
+              }
+              return acc
+            },
+            {} as Record<string, string>
+          )
+          // 登录后重定向到用户原来想访问的页面
+          router.push({ path: redirect.value || '/', query: otherQueryParams })
+        })
+        .catch((error) => {
+          loading.value = false
+          console.error('登录失败:', error)
+        })
     } else {
       console.log('error submit!', fields)
     }
