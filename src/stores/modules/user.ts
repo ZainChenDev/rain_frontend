@@ -15,7 +15,7 @@ interface UserState {
 interface UserInfo {
   username: string
   password: string
-  code: string
+  captcha: string
   uuid: string
 }
 
@@ -34,14 +34,15 @@ const useUserStore = defineStore('user', {
     login(userInfo: UserInfo): Promise<void> {
       const username = userInfo.username.trim()
       const password = userInfo.password
-      const code = userInfo.code
+      const captcha = userInfo.captcha
       const uuid = userInfo.uuid
 
       return new Promise((resolve, reject) => {
-        login({ username, password, code, uuid })
+        login({ username, password, captcha, uuid })
           .then((res) => {
-            setToken(res.token)
-            this.token = res.token
+            // 登录成功后保存token到cookie
+            setToken(res)
+            this.token = res
             resolve()
           })
           .catch((error) => {

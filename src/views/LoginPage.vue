@@ -12,6 +12,14 @@
           <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
         </el-input>
       </el-form-item>
+      <el-form-item prop="captcha">
+        <el-input v-model="loginForm.captcha" size="large" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleLogin">
+          <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
+        </el-input>
+        <div class="login-captcha">
+          <img :src="captchaImgUrl" @click="getCaptcha" class="login-captcha-img" />
+        </div>
+      </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin: 0px 0px 25px 0px">记住密码</el-checkbox>
       <el-form-item style="width: 100%">
         <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin(loginFormRef)">
@@ -20,23 +28,36 @@
         </el-button>
       </el-form-item>
     </el-form>
+
+    <div class="el-login-footer">
+      <span>No Copyright.</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import useUserStore from '@/stores/modules/user'
+import { captcha } from '@/api/login'
 
 import Cookies from 'js-cookie'
 
 import type { FormInstance, FormRules } from 'element-plus'
 import type { LocationQueryValue } from 'vue-router'
 
-// 定义接口
+/**
+ * 定义接口
+ */
 interface LoginForm {
   username: string
   password: string
   rememberMe: boolean
-  code: string
+  captcha: string
+  uuid: string
+}
+
+interface CaptchaResponse {
+  captchaEnabled?: boolean
+  img: string
   uuid: string
 }
 
@@ -49,30 +70,31 @@ const loginForm = ref<LoginForm>({
   username: 'admin',
   password: 'admin123',
   rememberMe: false,
-  code: '',
+  captcha: '',
   uuid: ''
 })
 
-/* 表单验证 */
+/**
+ * 表单验证
+ */
 const loginFormRef = ref<FormInstance>()
 const loginFormRules = ref<FormRules<LoginForm>>({
   username: [{ required: true, trigger: 'blur', message: '请输入您的账号' }],
   password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
-  code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
+  captcha: [{ required: true, trigger: 'change', message: '请输入验证码' }]
 })
 
 const loading = ref<boolean>(false)
 
 const redirect = ref(undefined)
 
-/* 登录 */
+/**
+ * 登录
+ */
 const handleLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      // 登录逻辑
-      console.log('submit!')
-
       loading.value = true
       // 勾选了需要记住密码设置在 cookie 中设置记住用户名和密码
       if (loginForm.value.rememberMe) {
@@ -86,6 +108,7 @@ const handleLogin = async (formEl: FormInstance | undefined) => {
         Cookies.remove('rememberMe')
       }
 
+      // 登录并保存token到cookie
       userStore
         .login(loginForm.value)
         .then(() => {
@@ -125,7 +148,25 @@ const getCookie = () => {
   }
 }
 
+/**
+ * 验证码
+ */
+const captchaImgUrl = ref<string>('')
+const getCaptcha = () => {
+  captcha()
+    .then((res: CaptchaResponse) => {
+      if (res.captchaEnabled) {
+        loginForm.value.uuid = res.uuid
+        captchaImgUrl.value = 'data:image/gif;base64,' + res.img
+      }
+    })
+    .catch((error) => {
+      console.error('获取验证码失败:', error)
+    })
+}
+
 getCookie()
+getCaptcha()
 </script>
 
 <style lang="scss" scoped>
@@ -168,7 +209,7 @@ getCookie()
   text-align: center;
   color: #bfbfbf;
 }
-.login-code {
+.login-captcha {
   width: 33%;
   height: 40px;
   float: right;
@@ -189,7 +230,7 @@ getCookie()
   font-size: 12px;
   letter-spacing: 1px;
 }
-.login-code-img {
+.login-captcha-img {
   height: 40px;
   padding-left: 12px;
 }
