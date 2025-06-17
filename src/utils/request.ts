@@ -39,7 +39,8 @@ service.interceptors.response.use(
     // 处理响应数据
     const res = response.data
     if (res.code === 200) {
-      return res // 直接返回实际数据
+      // 只返回业务数据
+      return res.data
     } else {
       // 处理业务逻辑错误
       ElMessage.error(res.message)
