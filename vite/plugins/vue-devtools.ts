@@ -1,10 +1,10 @@
 import VueDevTools from 'vite-plugin-vue-devtools'
 
 // https://devtools.vuejs.org/
-export function createVueDevTools(mode: string) {
+export default function createVueDevTools(mode: string) {
   return VueDevTools({
     // 配置选项
-    launchEditor: 'vscode', // 或 'webstorm', 'atom' 等
+    launchEditor: 'code',
 
     // 仅在开发环境启用
     appendTo: mode === 'development' ? 'src/main.ts' : undefined,

@@ -4,8 +4,12 @@ import { defineConfig, loadEnv, type ConfigEnv, type UserConfig } from 'vite'
 
 import { createVitePlugins } from './vite/plugins'
 
-// https://vite.dev/config/
-export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+/**
+ * 参考：https://vite.dev/config/
+ * command: 'serve' | 'build'
+ * mode: 'development' | 'production'
+ */
+export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
     // plugins: [vue(), vueDevTools()],

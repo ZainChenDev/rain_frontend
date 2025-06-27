@@ -1,8 +1,10 @@
 import type { PluginOption } from 'vite'
-import createAutoImport from './auto-import'
 
 import vue from '@vitejs/plugin-vue'
-import { createVueDevTools } from './vue-devtools'
+
+import createVueDevTools from './vue-devtools'
+import createAutoImport from './auto-import'
+import createVueComponents from './vue-components'
 
 export interface PluginOptions {
   env: Record<string, string>
@@ -16,13 +18,13 @@ export function createVitePlugins(options: PluginOptions): PluginOption[] {
 
   const vitePlugins: PluginOption[] = [vue()]
 
-  // Vue DevTools - 仅在开发环境启用
+  // 仅 开发环境 启用
   if (!isBuild) {
     vitePlugins.push(createVueDevTools(mode))
   }
 
-  // 开发&生产 都需要的插件
-  vitePlugins.push(createAutoImport())
+  // 开发&生产 都启用
+  vitePlugins.push(createAutoImport(), createVueComponents())
 
   return vitePlugins
 }
