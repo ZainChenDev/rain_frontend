@@ -1,20 +1,15 @@
 <template>
-  <el-container class="main-container">
-    <el-header>
-      <Header />
-    </el-header>
-    <el-container>
-      <Aside />
-      <el-main>
-        <RouterView />
-      </el-main>
-    </el-container>
-  </el-container>
+  <div>
+    <app-sidebar />
+    <div>
+      <app-navbar />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import Header from './components/Header.vue'
-import Aside from './components/Aside.vue'
+import AppNavbar from './components/Navbar/AppNavbar.vue'
+import AppSidebar from './components/Sidebar/AppSidebar.vue'
 </script>
 
 <style lang="scss" scoped>

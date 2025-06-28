@@ -1,0 +1,22 @@
+@use 'abstracts';
+@use 'layout';
+
+// 全局样式
+body {
+  margin: 0;
+  padding: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+// 全局使用border-box
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100vh;
+}
