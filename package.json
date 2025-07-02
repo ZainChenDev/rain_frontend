@@ -13,11 +13,13 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.9.0",
     "element-plus": "^2.9.11",
     "js-cookie": "^3.0.5",
     "pinia": "^3.0.1",
+    "tailwindcss": "^4.1.11",
     "vue": "^3.5.13",
     "vue-icons-plus": "^0.1.8",
     "vue-router": "^4.5.0"
@@ -33,7 +35,8 @@
     "eslint-plugin-vue": "~10.0.0",
     "jiti": "^2.4.2",
     "npm-run-all2": "^7.0.2",
-    "prettier": "3.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "sass": "^1.89.1",
     "sass-loader": "^16.0.5",
     "typescript": "~5.8.0",

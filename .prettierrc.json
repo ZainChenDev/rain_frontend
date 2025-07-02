@@ -1,8 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/prettierrc",
-  "singleAttributePerLine": false,
+  "singleAttributePerLine": true,
+  "bracketSameLine": true,
   "semi": false,
   "singleQuote": true,
   "printWidth": 200,
-  "trailingComma": "none"
+  "trailingComma": "none",
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindStylesheet": "./src/assets/styles/main.css"
 }
