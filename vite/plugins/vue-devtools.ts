@@ -12,7 +12,7 @@ export default function createVueDevTools(mode: string) {
     // 自定义DevTools的行为
     componentInspector: {
       // 启用组件检查器
-      enabled: true,
+      enabled: false,
       // 快捷键配置
       toggleComboKey: 'alt-d'
     },
